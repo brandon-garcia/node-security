@@ -1,31 +1,9 @@
-import {hmac} from "./hashing";
-import {IOptional, Optional} from "@bcg-ts/ts-toolkit";
+import {generateSessionToken} from "./session";
 
-const DELIMITER = "-";
-
-const COOKIE_REGEX = /token=(?<id>[a-zA-Z0-9]{32})-(?<signature>[a-zA-Z0-9]{32, 256})/;
-
-export const generateSessionCookieHeader = (
+const generateSessionTokenCookieHeader = (
   secret: string,
   sessionId: string
 ): string =>
   "token=" +
-  sessionId +
-  DELIMITER +
-  hmac(secret, sessionId, "hex").toString("hex") +
+  generateSessionToken(secret, sessionId) +
   "; SameSite=Strict; secure; HttpOnly";
-
-export const getSessionIdFromCookie = (
-  secret: string,
-  cookie: string,
-): IOptional<string> => {
-  const parsed = COOKIE_REGEX.exec(cookie);
-  if (parsed == null || parsed.length !== 3) {
-    return Optional.none();
-  }
-  const [, sessionId, signature] = parsed;
-  if (signature === hmac(secret, sessionId, "hex").toString("hex")) {
-    return Optional.some(sessionId);
-  }
-  return Optional.none();
-}
