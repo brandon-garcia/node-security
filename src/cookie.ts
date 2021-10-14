@@ -1,25 +1,29 @@
 import {hmac} from "./hashing";
 import {IOptional, Optional} from "@bcg-ts/ts-toolkit";
 
-const DELIMITER = "~";
+const DELIMITER = "-";
 
-export const generateSessionCookie = (
+const COOKIE_REGEX = /token=(?<id>[a-zA-Z0-9]{32})-(?<signature>[a-zA-Z0-9]{32, 256})/;
+
+export const generateSessionCookieHeader = (
   secret: string,
   sessionId: string
 ): string =>
+  "token=" +
   sessionId +
   DELIMITER +
-  hmac(secret, sessionId, "hex").toString("hex");
+  hmac(secret, sessionId, "hex").toString("hex") +
+  "; SameSite=Strict; secure; HttpOnly";
 
 export const getSessionIdFromCookie = (
   secret: string,
   cookie: string,
 ): IOptional<string> => {
-  const segments = cookie.split(DELIMITER);
-  if (segments.length !== 2) {
+  const parsed = COOKIE_REGEX.exec(cookie);
+  if (parsed == null || parsed.length !== 3) {
     return Optional.none();
   }
-  const [sessionId, signature] = segments;
+  const [, sessionId, signature] = parsed;
   if (signature === hmac(secret, sessionId, "hex").toString("hex")) {
     return Optional.some(sessionId);
   }
