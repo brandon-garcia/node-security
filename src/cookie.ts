@@ -1,6 +1,6 @@
 import {generateSessionToken} from "./session";
 
-const generateSessionTokenCookieHeader = (
+export const generateSessionTokenCookieHeader = (
   secret: string,
   sessionId: string
 ): string =>
