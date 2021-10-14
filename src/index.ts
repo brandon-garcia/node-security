@@ -1,3 +1,4 @@
+export * from "./2fa";
 export * from "./cookie";
 export * from "./csrf";
 export * from "./hashing";
