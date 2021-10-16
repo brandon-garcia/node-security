@@ -10,7 +10,7 @@ export interface TwoFactorAuthSecret {
 export const generate2faSecret = (issuer: string, name: string): TwoFactorAuthSecret => {
   const secret = speakeasy.generateSecret({
     issuer,
-    name
+    name,
   });
 
   if (secret.otpauth_url == null) {

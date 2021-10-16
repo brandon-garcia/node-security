@@ -7,7 +7,7 @@ const speakeasy = require("speakeasy");
 const generate2faSecret = (issuer, name) => {
     const secret = speakeasy.generateSecret({
         issuer,
-        name
+        name,
     });
     if (secret.otpauth_url == null) {
         throw new Error("failed to generate 2FA secret");

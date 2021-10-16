@@ -15,6 +15,7 @@ __exportStar(require("./cookie"), exports);
 __exportStar(require("./csrf"), exports);
 __exportStar(require("./hashing"), exports);
 __exportStar(require("./message-signature"), exports);
+__exportStar(require("./password"), exports);
 __exportStar(require("./session"), exports);
 __exportStar(require("./symmetric"), exports);
 //# sourceMappingURL=index.js.map
